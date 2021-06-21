@@ -1,0 +1,29 @@
+{
+  "input_program": [
+    {
+      "type": "push-string-instruction",
+      "value": "f"
+    },
+    {
+      "type": "push-string-instruction",
+      "value": "o"
+    },
+    {
+      "type": "push-string-instruction",
+      "value": "o"
+    },
+    {
+      "type": "invoke-function-instruction",
+      "functionName": "stacksize"
+    }
+  ],
+  "initial_context": {},
+  "expected": {
+    "stack": [
+      "f",
+      "o",
+      "o",
+      3
+    ]
+  }
+}

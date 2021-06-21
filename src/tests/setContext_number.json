@@ -1,0 +1,22 @@
+{
+  "input_program": [
+    {
+      "type": "push-number-instruction",
+      "value": 1
+    },
+    {
+      "type": "push-string-instruction",
+      "value": "bar"
+    },
+    {
+      "type": "invoke-function-instruction",
+      "functionName": "setContext"
+    }
+  ],
+  "initial_context": {},
+  "expected": {
+    "context": {
+      "bar": 1
+    }
+  }
+}

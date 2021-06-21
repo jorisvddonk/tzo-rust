@@ -1,0 +1,135 @@
+{
+  "input_program": [
+    {
+      "type": "invoke-function-instruction",
+      "functionName": "{"
+    },
+    {
+      "type": "invoke-function-instruction",
+      "functionName": "nop",
+      "label": "mul3"
+    },
+    {
+      "type": "push-string-instruction",
+      "value": "_mul3_return_pc"
+    },
+    {
+      "type": "invoke-function-instruction",
+      "functionName": "setContext"
+    },
+    {
+      "type": "push-number-instruction",
+      "value": 3
+    },
+    {
+      "type": "invoke-function-instruction",
+      "functionName": "*"
+    },
+    {
+      "type": "push-string-instruction",
+      "value": "_mul3_return_pc"
+    },
+    {
+      "type": "invoke-function-instruction",
+      "functionName": "getContext"
+    },
+    {
+      "type": "push-number-instruction",
+      "value": 3
+    },
+    {
+      "type": "invoke-function-instruction",
+      "functionName": "+"
+    },
+    {
+      "type": "push-string-instruction",
+      "value": "_mul3_return_pc"
+    },
+    {
+      "type": "invoke-function-instruction",
+      "functionName": "delContext"
+    },
+    {
+      "type": "invoke-function-instruction",
+      "functionName": "goto"
+    },
+    {
+      "type": "invoke-function-instruction",
+      "functionName": "}"
+    },
+    {
+      "type": "push-number-instruction",
+      "value": 1
+    },
+    {
+      "type": "invoke-function-instruction",
+      "functionName": "ppc"
+    },
+    {
+      "type": "push-string-instruction",
+      "value": "mul3"
+    },
+    {
+      "type": "invoke-function-instruction",
+      "functionName": "goto"
+    },
+    {
+      "type": "push-number-instruction",
+      "value": 2
+    },
+    {
+      "type": "invoke-function-instruction",
+      "functionName": "ppc"
+    },
+    {
+      "type": "push-string-instruction",
+      "value": "mul3"
+    },
+    {
+      "type": "invoke-function-instruction",
+      "functionName": "goto"
+    },
+    {
+      "type": "push-number-instruction",
+      "value": 3
+    },
+    {
+      "type": "invoke-function-instruction",
+      "functionName": "ppc"
+    },
+    {
+      "type": "push-string-instruction",
+      "value": "mul3"
+    },
+    {
+      "type": "invoke-function-instruction",
+      "functionName": "goto"
+    },
+    {
+      "type": "push-number-instruction",
+      "value": 4
+    },
+    {
+      "type": "invoke-function-instruction",
+      "functionName": "ppc"
+    },
+    {
+      "type": "push-string-instruction",
+      "value": "mul3"
+    },
+    {
+      "type": "invoke-function-instruction",
+      "functionName": "goto"
+    }
+  ],
+  "initial_context": {},
+  "expected": {
+    "stack": [
+      3,
+      6,
+      9,
+      12
+    ],
+    "context": {}
+  }
+}

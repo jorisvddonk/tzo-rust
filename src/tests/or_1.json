@@ -1,0 +1,22 @@
+{
+  "input_program": [
+    {
+      "type": "push-number-instruction",
+      "value": 1
+    },
+    {
+      "type": "push-number-instruction",
+      "value": 0
+    },
+    {
+      "type": "invoke-function-instruction",
+      "functionName": "or"
+    }
+  ],
+  "initial_context": {},
+  "expected": {
+    "stack": [
+      1
+    ]
+  }
+}

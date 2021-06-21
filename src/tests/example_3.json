@@ -1,0 +1,30 @@
+{
+  "input_program": [
+    {
+      "type": "push-string-instruction",
+      "value": "Hello"
+    },
+    {
+      "type": "push-string-instruction",
+      "value": ","
+    },
+    {
+      "type": "push-string-instruction",
+      "value": " world!"
+    },
+    {
+      "type": "invoke-function-instruction",
+      "functionName": "rconcat"
+    },
+    {
+      "type": "invoke-function-instruction",
+      "functionName": "rconcat"
+    }
+  ],
+  "initial_context": {},
+  "expected": {
+    "stack": [
+      "Hello, world!"
+    ]
+  }
+}

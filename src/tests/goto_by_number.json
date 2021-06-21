@@ -1,0 +1,38 @@
+{
+  "input_program": [
+    {
+      "type": "push-number-instruction",
+      "value": 5
+    },
+    {
+      "type": "invoke-function-instruction",
+      "functionName": "goto"
+    },
+    {
+      "type": "push-string-instruction",
+      "value": "foo"
+    },
+    {
+      "type": "push-string-instruction",
+      "value": "bar"
+    },
+    {
+      "type": "push-string-instruction",
+      "value": "baz"
+    },
+    {
+      "type": "push-string-instruction",
+      "value": "quux"
+    },
+    {
+      "type": "invoke-function-instruction",
+      "functionName": "exit"
+    }
+  ],
+  "initial_context": {},
+  "expected": {
+    "stack": [
+      "quux"
+    ]
+  }
+}

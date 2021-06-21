@@ -1,0 +1,14 @@
+{
+  "input_program": [
+    {
+      "type": "invoke-function-instruction",
+      "functionName": "ppc"
+    }
+  ],
+  "initial_context": {},
+  "expected": {
+    "stack": [
+      0
+    ]
+  }
+}

@@ -1,0 +1,22 @@
+{
+  "input_program": [
+    {
+      "type": "push-string-instruction",
+      "value": "foo"
+    },
+    {
+      "type": "push-string-instruction",
+      "value": "bar"
+    },
+    {
+      "type": "invoke-function-instruction",
+      "functionName": "eq"
+    }
+  ],
+  "initial_context": {},
+  "expected": {
+    "stack": [
+      0
+    ]
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "input_program": [
+    {
+      "type": "push-number-instruction",
+      "value": 0
+    },
+    {
+      "type": "invoke-function-instruction",
+      "functionName": "jz"
+    },
+    {
+      "type": "push-string-instruction",
+      "value": "no"
+    }
+  ],
+  "initial_context": {},
+  "expected": {
+    "stack": []
+  }
+}

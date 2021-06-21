@@ -1,0 +1,24 @@
+{
+  "input_program": [
+    {
+      "type": "push-string-instruction",
+      "value": "foo"
+    },
+    {
+      "type": "push-string-instruction",
+      "value": "bar"
+    },
+    {
+      "type": "push-string-instruction",
+      "value": "baz"
+    }
+  ],
+  "initial_context": {},
+  "expected": {
+    "stack": [
+      "foo",
+      "bar",
+      "baz"
+    ]
+  }
+}

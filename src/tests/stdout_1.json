@@ -1,0 +1,16 @@
+{
+  "input_program": [
+    {
+      "type": "push-string-instruction",
+      "value": "hello"
+    },
+    {
+      "type": "invoke-function-instruction",
+      "functionName": "stdout"
+    }
+  ],
+  "initial_context": {},
+  "expected": {
+    "stack": []
+  }
+}

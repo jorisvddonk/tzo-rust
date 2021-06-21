@@ -1,0 +1,22 @@
+{
+  "input_program": [
+    {
+      "type": "push-number-instruction",
+      "value": -1
+    },
+    {
+      "type": "invoke-function-instruction",
+      "functionName": "jgz"
+    },
+    {
+      "type": "push-string-instruction",
+      "value": "yes"
+    }
+  ],
+  "initial_context": {},
+  "expected": {
+    "stack": [
+      "yes"
+    ]
+  }
+}

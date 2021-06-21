@@ -1,0 +1,22 @@
+{
+  "input_program": [
+    {
+      "type": "push-string-instruction",
+      "value": "1"
+    },
+    {
+      "type": "push-string-instruction",
+      "value": "two"
+    },
+    {
+      "type": "invoke-function-instruction",
+      "functionName": "concat"
+    }
+  ],
+  "initial_context": {},
+  "expected": {
+    "stack": [
+      "two1"
+    ]
+  }
+}

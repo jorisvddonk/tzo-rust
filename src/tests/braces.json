@@ -1,0 +1,49 @@
+{
+  "input_program": [
+    {
+      "type": "push-number-instruction",
+      "value": 1
+    },
+    {
+      "type": "push-number-instruction",
+      "value": 2
+    },
+    {
+      "type": "invoke-function-instruction",
+      "functionName": "{"
+    },
+    {
+      "type": "push-number-instruction",
+      "value": 3
+    },
+    {
+      "type": "push-number-instruction",
+      "value": 4
+    },
+    {
+      "type": "push-number-instruction",
+      "value": 5
+    },
+    {
+      "type": "invoke-function-instruction",
+      "functionName": "}"
+    },
+    {
+      "type": "push-number-instruction",
+      "value": 6
+    },
+    {
+      "type": "push-number-instruction",
+      "value": 7
+    }
+  ],
+  "initial_context": {},
+  "expected": {
+    "stack": [
+      1,
+      2,
+      6,
+      7
+    ]
+  }
+}

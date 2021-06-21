@@ -1,0 +1,104 @@
+{
+  "input_program": [
+    {
+      "type": "push-number-instruction",
+      "value": 1
+    },
+    {
+      "type": "push-number-instruction",
+      "value": 2
+    },
+    {
+      "type": "push-number-instruction",
+      "value": 3
+    },
+    {
+      "type": "push-number-instruction",
+      "value": 4
+    },
+    {
+      "type": "push-string-instruction",
+      "value": "hi"
+    },
+    {
+      "type": "push-number-instruction",
+      "value": 0
+    },
+    {
+      "type": "push-number-instruction",
+      "value": -1
+    },
+    {
+      "type": "push-number-instruction",
+      "value": 0
+    },
+    {
+      "type": "push-number-instruction",
+      "value": 0
+    },
+    {
+      "type": "push-number-instruction",
+      "value": 1
+    },
+    {
+      "type": "push-number-instruction",
+      "value": 1
+    },
+    {
+      "type": "invoke-function-instruction",
+      "functionName": "stacksize"
+    },
+    {
+      "type": "invoke-function-instruction",
+      "functionName": "jgz"
+    },
+    {
+      "type": "invoke-function-instruction",
+      "functionName": "{"
+    },
+    {
+      "type": "invoke-function-instruction",
+      "functionName": "pop"
+    },
+    {
+      "type": "invoke-function-instruction",
+      "functionName": "}"
+    },
+    {
+      "type": "invoke-function-instruction",
+      "functionName": "stacksize"
+    },
+    {
+      "type": "invoke-function-instruction",
+      "functionName": "jgz"
+    },
+    {
+      "type": "invoke-function-instruction",
+      "functionName": "{"
+    },
+    {
+      "type": "push-number-instruction",
+      "value": 9
+    },
+    {
+      "type": "invoke-function-instruction",
+      "functionName": "ppc"
+    },
+    {
+      "type": "invoke-function-instruction",
+      "functionName": "-"
+    },
+    {
+      "type": "invoke-function-instruction",
+      "functionName": "goto"
+    },
+    {
+      "type": "invoke-function-instruction",
+      "functionName": "}"
+    }
+  ],
+  "initial_context": {},
+  "expected": {
+    "stack": []
+  }
+}

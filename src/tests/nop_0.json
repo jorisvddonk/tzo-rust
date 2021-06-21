@@ -1,0 +1,20 @@
+{
+  "input_program": [
+    {
+      "type": "invoke-function-instruction",
+      "functionName": "nop"
+    },
+    {
+      "type": "invoke-function-instruction",
+      "functionName": "nop"
+    },
+    {
+      "type": "invoke-function-instruction",
+      "functionName": "nop"
+    }
+  ],
+  "initial_context": {},
+  "expected": {
+    "stack": []
+  }
+}

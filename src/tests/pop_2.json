@@ -1,0 +1,16 @@
+{
+  "input_program": [
+    {
+      "type": "push-string-instruction",
+      "value": "test"
+    },
+    {
+      "type": "invoke-function-instruction",
+      "functionName": "pop"
+    }
+  ],
+  "initial_context": {},
+  "expected": {
+    "stack": []
+  }
+}

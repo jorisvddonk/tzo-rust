@@ -1,0 +1,22 @@
+{
+  "input_program": [
+    {
+      "type": "push-string-instruction",
+      "value": "foobar"
+    },
+    {
+      "type": "invoke-function-instruction",
+      "functionName": "hasContext"
+    }
+  ],
+  "initial_context": {
+    "ham": "ster",
+    "one": 1,
+    "two": 2
+  },
+  "expected": {
+    "stack": [
+      0
+    ]
+  }
+}
