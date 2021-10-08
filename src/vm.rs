@@ -426,107 +426,74 @@ impl VM {
             if i["type"] == "invoke-function-instruction" {
                 if i["functionName"] == "nop" {
                     self.programlist.push(Instr::Func(VM::i_nop));
-                }
-                if i["functionName"] == "pop" {
+                } else if i["functionName"] == "pop" {
                     self.programlist.push(Instr::Func(VM::i_pop));
-                }
-                if i["functionName"] == "plus" || i["functionName"] == "+" {
+                } else if i["functionName"] == "plus" || i["functionName"] == "+" {
                     self.programlist.push(Instr::Func(VM::i_plus));
-                }
-                if i["functionName"] == "min" || i["functionName"] == "-" {
+                } else if i["functionName"] == "min" || i["functionName"] == "-" {
                     self.programlist.push(Instr::Func(VM::i_min));
-                }
-                if i["functionName"] == "mul" || i["functionName"] == "*" {
+                } else if i["functionName"] == "mul" || i["functionName"] == "*" {
                     self.programlist.push(Instr::Func(VM::i_mul));
-                }
-                if i["functionName"] == "concat" {
+                } else if i["functionName"] == "concat" {
                     self.programlist.push(Instr::Func(VM::i_concat));
-                }
-                if i["functionName"] == "rconcat" {
+                } else if i["functionName"] == "rconcat" {
                     self.programlist.push(Instr::Func(VM::i_rconcat));
-                }
-                if i["functionName"] == "randInt" {
+                } else if i["functionName"] == "randInt" {
                     self.programlist.push(Instr::Func(VM::i_randint));
-                }
-                if i["functionName"] == "charCode" {
+                } else if i["functionName"] == "charCode" {
                     self.programlist.push(Instr::Func(VM::i_charcode));
-                }
-                if i["functionName"] == "ppc" {
+                } else if i["functionName"] == "ppc" {
                     self.programlist.push(Instr::Func(VM::i_ppc));
-                }
-
-                if i["functionName"] == "eq" {
+                } else if i["functionName"] == "eq" {
                     self.programlist.push(Instr::Func(VM::i_eq));
-                }
-                if i["functionName"] == "not" {
+                } else if i["functionName"] == "not" {
                     self.programlist.push(Instr::Func(VM::i_not));
-                }
-                if i["functionName"] == "or" {
+                } else if i["functionName"] == "or" {
                     self.programlist.push(Instr::Func(VM::i_or));
-                }
-                if i["functionName"] == "and" {
+                } else if i["functionName"] == "and" {
                     self.programlist.push(Instr::Func(VM::i_and));
-                }
-
-                if i["functionName"] == "jgz" {
+                } else if i["functionName"] == "jgz" {
                     self.programlist.push(Instr::Func(VM::i_jgz));
-                }
-                if i["functionName"] == "jz" {
+                } else if i["functionName"] == "jz" {
                     self.programlist.push(Instr::Func(VM::i_jz));
-                }
-                if i["functionName"] == "gt" {
+                } else if i["functionName"] == "gt" {
                     self.programlist.push(Instr::Func(VM::i_gt));
-                }
-                if i["functionName"] == "lt" {
+                } else if i["functionName"] == "lt" {
                     self.programlist.push(Instr::Func(VM::i_lt));
-                }
-
-                if i["functionName"] == "dup" {
+                } else if i["functionName"] == "dup" {
                     self.programlist.push(Instr::Func(VM::i_dup));
-                }
-
-                if i["functionName"] == "pause" {
+                } else if i["functionName"] == "pause" {
                     self.programlist.push(Instr::Func(VM::i_pause));
-                }
-                if i["functionName"] == "exit" {
+                } else if i["functionName"] == "exit" {
                     self.programlist.push(Instr::Func(VM::i_exit));
-                }
-
-                if i["functionName"] == "goto" {
+                } else if i["functionName"] == "goto" {
                     self.programlist.push(Instr::Func(VM::i_goto));
-                }
-
-                if i["functionName"] == "{" {
+                } else if i["functionName"] == "{" {
                     self.programlist.push(Instr::OpenBrace);
-                }
-                if i["functionName"] == "}" {
+                } else if i["functionName"] == "}" {
                     self.programlist.push(Instr::CloseBrace);
-                }
-
-                if i["functionName"] == "getContext" {
+                } else if i["functionName"] == "getContext" {
                     self.programlist.push(Instr::Func(VM::i_getcontext));
-                }
-                if i["functionName"] == "hasContext" {
+                } else if i["functionName"] == "hasContext" {
                     self.programlist.push(Instr::Func(VM::i_hascontext));
-                }
-                if i["functionName"] == "setContext" {
+                } else if i["functionName"] == "setContext" {
                     self.programlist.push(Instr::Func(VM::i_setcontext));
-                }
-                if i["functionName"] == "delContext" {
+                } else if i["functionName"] == "delContext" {
                     self.programlist.push(Instr::Func(VM::i_delcontext));
-                }
-
-                if i["functionName"] == "stacksize" {
+                } else if i["functionName"] == "stacksize" {
                     self.programlist.push(Instr::Func(VM::i_stacksize));
-                }
-                if i["functionName"] == "stdout" {
+                } else if i["functionName"] == "stdout" {
                     self.programlist.push(Instr::Func(VM::i_stdout));
-                }
-
-                let fname = i["functionName"].as_str().unwrap();
-                if self.foreign_functions.contains_key(fname) {
-                    self.programlist
-                        .push(Instr::Func(*self.foreign_functions.get(fname).unwrap()));
+                } else {
+                    let fname = i["functionName"].as_str().unwrap();
+                    if self.foreign_functions.contains_key(fname) {
+                        self.programlist
+                            .push(Instr::Func(*self.foreign_functions.get(fname).unwrap()));
+                    } else {
+                        if !fname.starts_with("_") {
+                            panic!("Function not found: {}", fname);
+                        }
+                    }
                 }
             }
             if i.as_object().unwrap().contains_key("label") {
