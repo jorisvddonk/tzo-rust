@@ -382,13 +382,13 @@ impl VM {
 
     pub fn step(&mut self) {
         let z = self.programlist.get(self.pc);
-        let x = match z {
+        let z = match z {
             Some(i) => i,
             None => {
                 panic!("Program counter exceeds program list size!");
             }
         };
-        match x {
+        match z {
             Instr::Number(a) => {
                 self.stack.push(Value::Number(*a));
             }
