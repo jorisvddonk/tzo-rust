@@ -13,7 +13,11 @@ fn main() {
     let instructions = v.as_array().unwrap().to_vec();
 
     let mut vm = vm::VM::new();
-    vm.registerForeignFunction("test".to_string(), testfn);
+    let test_ff = vm::ForeignFunc {
+        name: String::from("test"),
+        func: testfn,
+    };
+    vm.registerForeignFunction(test_ff);
     vm.load(instructions);
     vm.run();
 

@@ -10,7 +10,7 @@ pub struct VM {
     pub programlist: Vec<Instr>,
     pub context: HashMap<u64, Value>,
     pub labels: HashMap<String, i64>,
-    pub foreign_functions: HashMap<String, Func>,
+    pub foreign_functions: Vec<ForeignFunc>,
     pub running: bool,
     pub exited: bool,
 }
@@ -27,6 +27,11 @@ pub enum Instr {
     Func(Func),
     OpenBrace,
     CloseBrace,
+}
+
+pub struct ForeignFunc {
+    pub func: fn(&mut VM),
+    pub name: String,
 }
 
 type Func = fn(&mut VM);
@@ -365,7 +370,7 @@ impl VM {
             exited: false,
             context: HashMap::new(),
             labels: HashMap::new(),
-            foreign_functions: HashMap::new(),
+            foreign_functions: std::vec::Vec::new(),
         };
     }
 
@@ -408,8 +413,8 @@ impl VM {
         self.pc += 1;
     }
 
-    pub fn registerForeignFunction(&mut self, fname: String, function: Func) {
-        self.foreign_functions.insert(fname, function);
+    pub fn registerForeignFunction(&mut self, ffunc: ForeignFunc) {
+        self.foreign_functions.push(ffunc);
     }
 
     pub fn load(&mut self, instructions: std::vec::Vec<serde_json::Value>) {
@@ -486,9 +491,14 @@ impl VM {
                     self.programlist.push(Instr::Func(VM::i_stdout));
                 } else {
                     let fname = i["functionName"].as_str().unwrap();
-                    if self.foreign_functions.contains_key(fname) {
-                        self.programlist
-                            .push(Instr::Func(*self.foreign_functions.get(fname).unwrap()));
+                    let mut found = false;
+                    for i in &self.foreign_functions {
+                        if i.name.eq(fname) {
+                            self.programlist.push(Instr::Func(i.func));
+                            found = true;
+                        }
+                    }
+                    if found {
                     } else {
                         if !fname.starts_with("_") {
                             panic!("Function not found: {}", fname);
