@@ -413,7 +413,7 @@ impl VM {
         self.pc += 1;
     }
 
-    pub fn registerForeignFunction(&mut self, ffunc: ForeignFunc) {
+    pub fn register_foreign_function(&mut self, ffunc: ForeignFunc) {
         self.foreign_functions.push(ffunc);
     }
 
