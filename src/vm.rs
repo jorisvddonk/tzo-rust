@@ -385,6 +385,14 @@ impl VM {
         }
     }
 
+    pub fn suspend(&mut self) {
+        self.running = false;
+    }
+
+    pub fn resume(&mut self) {
+        self.running = true; // NOTE: does *not* increase programcounter!
+    }
+
     pub fn step(&mut self) {
         let z = self.programlist.get(self.pc);
         let z = match z {
