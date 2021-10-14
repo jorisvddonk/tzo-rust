@@ -1,5 +1,6 @@
 use std::fs;
 
+mod test_wasm;
 mod tests;
 mod vm;
 
