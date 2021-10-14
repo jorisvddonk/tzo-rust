@@ -17,7 +17,7 @@ fn main() {
         name: String::from("test"),
         func: testfn,
     };
-    vm.registerForeignFunction(test_ff);
+    vm.register_foreign_function(test_ff);
     vm.load(instructions);
     vm.run();
 
