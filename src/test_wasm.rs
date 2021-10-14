@@ -1,9 +1,8 @@
-use wasm_bindgen_test::*;
-
 #[cfg(test)]
 mod tests {
     // Note this useful idiom: importing names from outer (for mod tests) scope.
     use super::*;
+    use wasm_bindgen_test::*;
 
     fn test(contents: &str) {
         let v: serde_json::Value = serde_json::from_str(&contents).unwrap();
