@@ -471,4 +471,57 @@ mod tests {
   fn test_stdout_1() {
     test("./src/tests/stdout_1.json");
   }
+
+  fn run_with_numeric_key(functionName: &str) {
+    let instrs = vec![
+      serde_json::json!({ "type": "push-number-instruction", "value": 5 }),
+      serde_json::json!({ "type": "invoke-function-instruction", "functionName": functionName }),
+    ];
+    let mut vm = VM::new();
+    vm.load(instrs);
+    vm.run();
+  }
+
+  #[test]
+  #[should_panic(expected = "key must be a string")]
+  fn test_setContext_rejects_numeric_key() {
+    let instrs = vec![
+      serde_json::json!({ "type": "push-string-instruction", "value": "value" }),
+      serde_json::json!({ "type": "push-number-instruction", "value": 5 }),
+      serde_json::json!({ "type": "invoke-function-instruction", "functionName": "setContext" }),
+    ];
+    let mut vm = VM::new();
+    vm.load(instrs);
+    vm.run();
+  }
+
+  #[test]
+  #[should_panic(expected = "key must be a string")]
+  fn test_getContext_rejects_numeric_key() {
+    run_with_numeric_key("getContext");
+  }
+
+  #[test]
+  #[should_panic(expected = "key must be a string")]
+  fn test_hasContext_rejects_numeric_key() {
+    run_with_numeric_key("hasContext");
+  }
+
+  #[test]
+  #[should_panic(expected = "key must be a string")]
+  fn test_delContext_rejects_numeric_key() {
+    run_with_numeric_key("delContext");
+  }
+
+  #[test]
+  #[should_panic(expected = "key not found in context")]
+  fn test_getContext_throws_on_unknown_key() {
+    let instrs = vec![
+      serde_json::json!({ "type": "push-string-instruction", "value": "asdfzxc" }),
+      serde_json::json!({ "type": "invoke-function-instruction", "functionName": "getContext" }),
+    ];
+    let mut vm = VM::new();
+    vm.load(instrs);
+    vm.run();
+  }
 }
