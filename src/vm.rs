@@ -1,15 +1,13 @@
 use rand::rng;
 use rand::RngExt;
 use serde_json;
-use std::collections::hash_map::DefaultHasher;
 use std::collections::HashMap;
-use std::hash::Hasher;
 
 pub struct VM {
     pub pc: usize,
     pub stack: Vec<Value>,
     pub programlist: Vec<Instr>,
-    pub context: HashMap<u64, Value>,
+    pub context: HashMap<String, Value>,
     pub labels: HashMap<String, i64>,
     pub foreign_functions: Vec<ForeignFunc>,
     pub running: bool,
@@ -71,15 +69,6 @@ impl Value {
             Value::Number(a) => format!("{}", a),
             Value::String(a) => a.to_string(),
         }
-    }
-
-    pub fn as_hash(self) -> u64 {
-        let mut hasher = DefaultHasher::new();
-        match self {
-            Value::Number(a) => hasher.write_i64(a as i64),
-            Value::String(a) => hasher.write(a.as_bytes()),
-        }
-        return hasher.finish();
     }
 }
 
@@ -328,8 +317,14 @@ impl VM {
 
     pub fn i_getcontext(&mut self) {
         let a = self.stack.pop().unwrap();
-        let hash = &a.as_hash();
-        let r = self.context.get(hash).unwrap();
+        if !a.is_string() {
+            panic!("getContext: key must be a string");
+        }
+        let key = a.as_string();
+        let r = self
+            .context
+            .get(&key)
+            .expect("getContext: key not found in context");
         match r {
             Value::Number(x) => {
                 self.stack.push(Value::Number(*x as f64));
@@ -340,17 +335,25 @@ impl VM {
         }
     }
     pub fn i_hascontext(&mut self) {
-        let a = self.stack.pop().unwrap().as_hash();
-        if self.context.contains_key(&a) {
+        let a = self.stack.pop().unwrap();
+        if !a.is_string() {
+            panic!("hasContext: key must be a string");
+        }
+        let key = a.as_string();
+        if self.context.contains_key(&key) {
             self.stack.push(Value::Number(1 as f64));
         } else {
             self.stack.push(Value::Number(0 as f64));
         }
     }
     pub fn i_delcontext(&mut self) {
-        let a = self.stack.pop().unwrap().as_hash();
-        if self.context.contains_key(&a) {
-            self.context.remove(&a);
+        let a = self.stack.pop().unwrap();
+        if !a.is_string() {
+            panic!("delContext: key must be a string");
+        }
+        let key = a.as_string();
+        if self.context.contains_key(&key) {
+            self.context.remove(&key);
         } else {
             // do nothing
         }
@@ -358,8 +361,11 @@ impl VM {
     pub fn i_setcontext(&mut self) {
         let a = self.stack.pop().unwrap();
         let b = self.stack.pop().unwrap();
-        let hash = a.as_hash();
-        self.context.insert(hash, b);
+        if !a.is_string() {
+            panic!("setContext: key must be a string");
+        }
+        let key = a.as_string();
+        self.context.insert(key, b);
     }
 
     pub fn new() -> VM {

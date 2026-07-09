@@ -58,6 +58,21 @@ mod tests {
         i += 1;
       }
     }
+
+    if expected.contains_key("context") {
+      let exp_ctx = expected["context"].as_object().unwrap();
+      assert_eq!(vm.context.len(), exp_ctx.len(), "context size mismatch");
+      for (k, v) in exp_ctx {
+        let actual = vm
+          .context
+          .get(k)
+          .unwrap_or_else(|| panic!("expected context key missing: {}", k));
+        match actual {
+          crate::vm::Value::Number(n) => assert_eq!(*n, v.as_f64().unwrap()),
+          crate::vm::Value::String(s) => assert_eq!(s, v.as_str().unwrap()),
+        }
+      }
+    }
   }
 
   #[test]
