@@ -1,4 +1,5 @@
-use rand::{thread_rng, Rng};
+use rand::rng;
+use rand::RngExt;
 use serde_json;
 use std::collections::hash_map::DefaultHasher;
 use std::collections::HashMap;
@@ -194,7 +195,7 @@ impl VM {
     pub fn i_randint(&mut self) {
         let a = self.stack.pop().unwrap().as_number() as i32;
         self.stack
-            .push(Value::Number(thread_rng().gen_range(0..a) as f64));
+            .push(Value::Number(rng().random_range(0..a) as f64));
     }
 
     pub fn i_charcode(&mut self) {
