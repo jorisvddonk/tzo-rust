@@ -524,4 +524,68 @@ mod tests {
     vm.load(instrs);
     vm.run();
   }
+
+  fn run_program(instrs: Vec<serde_json::Value>) -> VM {
+    let mut vm = VM::new();
+    vm.load(instrs);
+    vm.run();
+    vm
+  }
+
+  #[test]
+  #[should_panic(expected = "operands must be numbers")]
+  fn test_plus_rejects_non_numeric() {
+    run_program(vec![
+      serde_json::json!({ "type": "push-string-instruction", "value": "foo" }),
+      serde_json::json!({ "type": "push-number-instruction", "value": 1 }),
+      serde_json::json!({ "type": "invoke-function-instruction", "functionName": "+" }),
+    ]);
+  }
+
+  #[test]
+  #[should_panic(expected = "operands must be numbers")]
+  fn test_min_rejects_non_numeric() {
+    run_program(vec![
+      serde_json::json!({ "type": "push-string-instruction", "value": "foo" }),
+      serde_json::json!({ "type": "push-number-instruction", "value": 1 }),
+      serde_json::json!({ "type": "invoke-function-instruction", "functionName": "-" }),
+    ]);
+  }
+
+  #[test]
+  #[should_panic(expected = "operands must be numbers")]
+  fn test_mul_rejects_non_numeric() {
+    run_program(vec![
+      serde_json::json!({ "type": "push-string-instruction", "value": "foo" }),
+      serde_json::json!({ "type": "push-number-instruction", "value": 1 }),
+      serde_json::json!({ "type": "invoke-function-instruction", "functionName": "*" }),
+    ]);
+  }
+
+  #[test]
+  fn test_randint_zero_returns_zero() {
+    // randInt with max 0 must not panic and must push 0 (matches tzo's Math.floor(random()*0))
+    let vm = run_program(vec![
+      serde_json::json!({ "type": "push-number-instruction", "value": 0 }),
+      serde_json::json!({ "type": "invoke-function-instruction", "functionName": "randInt" }),
+    ]);
+    assert_eq!(vm.stack.len(), 1);
+    assert_eq!(vm.stack[0].as_number(), 0.0);
+  }
+
+  #[test]
+  fn test_charcode_full_codepoint() {
+    // 97 -> 'a', 256 -> '\u0100' (Ā), matching String.fromCharCode
+    let vm_a = run_program(vec![
+      serde_json::json!({ "type": "push-number-instruction", "value": 97 }),
+      serde_json::json!({ "type": "invoke-function-instruction", "functionName": "charCode" }),
+    ]);
+    assert_eq!(vm_a.stack[0].as_string(), "a");
+
+    let vm_b = run_program(vec![
+      serde_json::json!({ "type": "push-number-instruction", "value": 256 }),
+      serde_json::json!({ "type": "invoke-function-instruction", "functionName": "charCode" }),
+    ]);
+    assert_eq!(vm_b.stack[0].as_string(), "\u{0100}");
+  }
 }

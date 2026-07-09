@@ -88,9 +88,11 @@ impl VM {
     pub fn i_plus(&mut self) {
         let a = self.stack.pop().unwrap();
         let b = self.stack.pop().unwrap();
-        if a.clone().is_number() && b.clone().is_number() {
+        if a.is_number() && b.is_number() {
             self.stack
                 .push(Value::Number(a.as_number() + b.as_number()));
+        } else {
+            panic!("+: operands must be numbers");
         }
     }
 
@@ -130,18 +132,22 @@ impl VM {
     pub fn i_min(&mut self) {
         let a = self.stack.pop().unwrap();
         let b = self.stack.pop().unwrap();
-        if a.clone().is_number() && b.clone().is_number() {
+        if a.is_number() && b.is_number() {
             self.stack
                 .push(Value::Number(a.as_number() - b.as_number()));
+        } else {
+            panic!("-: operands must be numbers");
         }
     }
 
     pub fn i_mul(&mut self) {
         let a = self.stack.pop().unwrap();
         let b = self.stack.pop().unwrap();
-        if a.clone().is_number() && b.clone().is_number() {
+        if a.is_number() && b.is_number() {
             self.stack
                 .push(Value::Number(a.as_number() * b.as_number()));
+        } else {
+            panic!("*: operands must be numbers");
         }
     }
 
@@ -182,14 +188,16 @@ impl VM {
     }
 
     pub fn i_randint(&mut self) {
-        let a = self.stack.pop().unwrap().as_number() as i32;
-        self.stack
-            .push(Value::Number(rng().random_range(0..a) as f64));
+        let a = self.stack.pop().unwrap().as_number();
+        let r = (rng().random::<f64>() * a).floor();
+        self.stack.push(Value::Number(r));
     }
 
     pub fn i_charcode(&mut self) {
-        let a = self.stack.pop().unwrap().as_number() as u8;
-        self.stack.push(Value::String(format!("{}", a as char)));
+        let a = self.stack.pop().unwrap().as_number() as i32;
+        let code = (a as u32) & 0xFFFF;
+        let c = char::from_u32(code).unwrap();
+        self.stack.push(Value::String(c.to_string()));
     }
 
     pub fn i_not(&mut self) {
