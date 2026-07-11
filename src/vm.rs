@@ -70,6 +70,29 @@ impl Value {
             Value::String(a) => a.to_string(),
         }
     }
+
+    // Mimics JavaScript's `"" + value` string coercion used by tzo's stdout,
+    // so output matches the reference implementation (Infinity/NaN/-0/undefined).
+    pub fn js_to_string(&self) -> String {
+        match self {
+            Value::Number(x) => {
+                if x.is_infinite() {
+                    if x.is_sign_positive() {
+                        "Infinity".to_string()
+                    } else {
+                        "-Infinity".to_string()
+                    }
+                } else if x.is_nan() {
+                    "NaN".to_string()
+                } else if *x == 0.0 && x.is_sign_negative() {
+                    "0".to_string()
+                } else {
+                    format!("{}", x)
+                }
+            }
+            Value::String(s) => s.clone(),
+        }
+    }
 }
 
 impl VM {
@@ -152,14 +175,9 @@ impl VM {
     }
 
     pub fn i_stdout(&mut self) {
-        let a = self.stack.pop().unwrap();
-        match a {
-            Value::Number(x) => {
-                print!("{}", x);
-            }
-            Value::String(x) => {
-                print!("{}", x);
-            }
+        match self.stack.pop() {
+            Some(v) => print!("{}", v.js_to_string()),
+            None => print!("undefined"),
         }
     }
 
@@ -201,8 +219,8 @@ impl VM {
     }
 
     pub fn i_not(&mut self) {
-        let a = self.stack.pop().unwrap().as_number() as i32;
-        if a == 0 {
+        let a = self.stack.pop().unwrap().as_number();
+        if a == 0.0 {
             self.stack.push(Value::Number(1 as f64));
         } else {
             self.stack.push(Value::Number(0 as f64));
@@ -210,9 +228,9 @@ impl VM {
     }
 
     pub fn i_or(&mut self) {
-        let a = self.stack.pop().unwrap().as_number() as i32;
-        let b = self.stack.pop().unwrap().as_number() as i32;
-        if a == 0 && b == 0 {
+        let a = self.stack.pop().unwrap().as_number();
+        let b = self.stack.pop().unwrap().as_number();
+        if a == 0.0 && b == 0.0 {
             self.stack.push(Value::Number(0 as f64));
         } else {
             self.stack.push(Value::Number(1 as f64));
@@ -220,9 +238,9 @@ impl VM {
     }
 
     pub fn i_and(&mut self) {
-        let a = self.stack.pop().unwrap().as_number() as i32;
-        let b = self.stack.pop().unwrap().as_number() as i32;
-        if a == 0 || b == 0 {
+        let a = self.stack.pop().unwrap().as_number();
+        let b = self.stack.pop().unwrap().as_number();
+        if a == 0.0 || b == 0.0 {
             self.stack.push(Value::Number(0 as f64));
         } else {
             self.stack.push(Value::Number(1 as f64));
@@ -230,22 +248,22 @@ impl VM {
     }
 
     pub fn i_jgz(&mut self) {
-        let a = self.stack.pop().unwrap().as_number() as i32;
-        if a > 0 {
+        let a = self.stack.pop().unwrap().as_number();
+        if a > 0.0 {
             self.pc += 1;
         }
     }
 
     pub fn i_jz(&mut self) {
-        let a = self.stack.pop().unwrap().as_number() as i32;
-        if a == 0 {
+        let a = self.stack.pop().unwrap().as_number();
+        if a == 0.0 {
             self.pc += 1;
         }
     }
 
     pub fn i_gt(&mut self) {
-        let a = self.stack.pop().unwrap().as_number() as i32;
-        let b = self.stack.pop().unwrap().as_number() as i32;
+        let a = self.stack.pop().unwrap().as_number();
+        let b = self.stack.pop().unwrap().as_number();
         if a > b {
             self.stack.push(Value::Number(1 as f64));
         } else {
@@ -254,8 +272,8 @@ impl VM {
     }
 
     pub fn i_lt(&mut self) {
-        let a = self.stack.pop().unwrap().as_number() as i32;
-        let b = self.stack.pop().unwrap().as_number() as i32;
+        let a = self.stack.pop().unwrap().as_number();
+        let b = self.stack.pop().unwrap().as_number();
         if a < b {
             self.stack.push(Value::Number(1 as f64));
         } else {

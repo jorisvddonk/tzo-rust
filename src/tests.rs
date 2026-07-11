@@ -588,4 +588,78 @@ mod tests {
     ]);
     assert_eq!(vm_b.stack[0].as_string(), "\u{0100}");
   }
+
+  #[test]
+  fn test_fractional_comparisons_use_float_semantics() {
+    // 0.1 0.9 gt -> 1 (top 0.9 > next 0.1); with int truncation this was 0
+    let vm = run_program(vec![
+      serde_json::json!({ "type": "push-number-instruction", "value": 0.1 }),
+      serde_json::json!({ "type": "push-number-instruction", "value": 0.9 }),
+      serde_json::json!({ "type": "invoke-function-instruction", "functionName": "gt" }),
+    ]);
+    assert_eq!(vm.stack[0].as_number(), 1.0);
+
+    // 0.9 0.1 lt -> 1 (top 0.1 < next 0.9); with int truncation this was 0
+    let vm2 = run_program(vec![
+      serde_json::json!({ "type": "push-number-instruction", "value": 0.9 }),
+      serde_json::json!({ "type": "push-number-instruction", "value": 0.1 }),
+      serde_json::json!({ "type": "invoke-function-instruction", "functionName": "lt" }),
+    ]);
+    assert_eq!(vm2.stack[0].as_number(), 1.0);
+  }
+
+  #[test]
+  fn test_fractional_jumps_use_float_semantics() {
+    // 0.5 jgz should skip the next instruction (0.5 > 0)
+    let vm = run_program(vec![
+      serde_json::json!({ "type": "push-number-instruction", "value": 0.5 }),
+      serde_json::json!({ "type": "invoke-function-instruction", "functionName": "jgz" }),
+      serde_json::json!({ "type": "push-number-instruction", "value": 99 }),
+    ]);
+    assert_eq!(vm.stack.len(), 0); // the 99 was skipped
+
+    // 0.5 jz should NOT skip (0.5 !== 0), so 99 remains
+    let vm2 = run_program(vec![
+      serde_json::json!({ "type": "push-number-instruction", "value": 0.5 }),
+      serde_json::json!({ "type": "invoke-function-instruction", "functionName": "jz" }),
+      serde_json::json!({ "type": "push-number-instruction", "value": 99 }),
+    ]);
+    assert_eq!(vm2.stack.len(), 1);
+    assert_eq!(vm2.stack[0].as_number(), 99.0);
+  }
+
+  #[test]
+  fn test_value_js_to_string_special_floats() {
+    use crate::vm::Value;
+    assert_eq!(Value::Number(f64::INFINITY).js_to_string(), "Infinity");
+    assert_eq!(Value::Number(f64::NEG_INFINITY).js_to_string(), "-Infinity");
+    assert_eq!(Value::Number(f64::NAN).js_to_string(), "NaN");
+    assert_eq!(Value::Number(-0.0).js_to_string(), "0");
+    assert_eq!(Value::Number(0.0).js_to_string(), "0");
+    assert_eq!(Value::Number(1.5).js_to_string(), "1.5");
+    assert_eq!(Value::String("hi".to_string()).js_to_string(), "hi");
+  }
+
+  #[test]
+  fn test_stdout_empty_stack_prints_undefined() {
+    // matches tzo's `"" + stack.pop()` which prints "undefined" on an empty stack
+    let mut vm = VM::new();
+    vm.load(vec![
+      serde_json::json!({ "type": "invoke-function-instruction", "functionName": "stdout" }),
+    ]);
+    vm.run(); // must not panic
+    assert_eq!(vm.stack.len(), 0);
+  }
+
+  #[test]
+  fn test_stdout_negative_zero_prints_zero() {
+    // -1 0 * -> -0.0; tzo prints "0" (JS "" + -0), not "-0"
+    let vm = run_program(vec![
+      serde_json::json!({ "type": "push-number-instruction", "value": 0 }),
+      serde_json::json!({ "type": "push-number-instruction", "value": -1 }),
+      serde_json::json!({ "type": "invoke-function-instruction", "functionName": "*" }),
+      serde_json::json!({ "type": "invoke-function-instruction", "functionName": "stdout" }),
+    ]);
+    assert_eq!(vm.stack.len(), 0);
+  }
 }
